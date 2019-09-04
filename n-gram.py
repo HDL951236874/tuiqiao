@@ -208,7 +208,6 @@ class N_gram():
         length = len(after_adjust[0])
         for n in range(self.N):
             for key in after_adjust[n]:
-                print(key)
                 try:
                     score = math.log10(self.process_p(U,B,key,b_,length))
                     final[n][key] = score  if score>-1000 else -1000
@@ -240,15 +239,36 @@ class N_gram():
             return data
 
     def correct_single_sen_threshold(self,w):
-        sen = w[:-1]
-        max_score = -1000
-        max_score_sen = ''
-        for key, val in self.dictionary[len(sen)].items():
-            if key[:-1] == sen and val>max_score:
-                max_score = val
-                max_score_sen = key
-        return max_score_sen[-1] if max_score_sen != '' else ''
 
+        candidate = []
+        char = w[-1]
+        if char in self.PronunciationConfusion_list:
+            word_list_P = []
+            for index in self.PronunciationConfusion_list[char]:
+                word_list_P += index
+            candidate += word_list_P
+        if char in self.ShapeConfusion_list:
+            word_list_S = []
+            for index in self.ShapeConfusion_list[char]:
+                word_list_S += index
+            candidate += word_list_S
+
+        # sen = w[:-1]
+        max_score = -1000
+        max_score_index = ''
+        for index in candidate:
+            gram_sen = w[:-1] + index
+            score = self.dictionary[len(gram_sen)-1][gram_sen] if gram_sen in self.dictionary[len(gram_sen)-1] else -1000
+            if score >max_score:
+                max_score = score
+                max_score_index = index
+
+        return max_score_index if max_score_index!=0 else ''
+        # for key, val in self.dictionary[len(sen)].items():
+        #     if key[:-1] == sen and val>max_score:
+        #         max_score = val
+        #         max_score_sen = key
+        # return max_score_sen[-1] if max_score_sen != '' else ''
 
     def correct_single_sen_brute_froce(self,w):
         candidate_for_each_word = []
@@ -295,9 +315,6 @@ class N_gram():
             if score < self.threshold:
                 new_word = self.correct_single_sen_threshold(sen)
                 if new_word != '':
-                    # w_list = list(w)
-                    # w_list[i] = new_word
-                    # w = ''.join(w_list)
                     w = w[:i-1]+new_word+w[i:]
             else:
                 new_word = sen[-1]
@@ -327,8 +344,5 @@ def loading():
 if __name__ == '__main__':
     M = N_gram(5)
 
-    test = '今天添气不好。'
-    # print(M.exam_single_sen(test))
-    # print(M.PronunciationConfusion_list)
+    test = '今田添气不好。'
     l = M.exam_single_sen(test)
-    print(l)
