@@ -2,10 +2,11 @@ import math
 import pickle
 
 class N_gram():
-    def __init__(self, N):
+    def __init__(self, N = 5):
         self.N = N
         self.threshold = -10
         self.path = 'data/data.train'
+        self.training_result_path = 'data/small.pk'
         self.data = self.make_data_list()
         self.dictionary = self.make_dictionary()
         self.PronunciationConfusion_list = self.Confusion_SimilarPronunciation()
@@ -56,7 +57,6 @@ class N_gram():
                 num +=1
 
             dic_after_ad.append(dic_new)
-            print('已经完成'+str(i+1)+'gram')
         dic_after_ad.append(l[-1])
 
         return dic_after_ad
@@ -100,9 +100,7 @@ class N_gram():
                             gram_layer[char] = {}
                         gram_layer = gram_layer[char]
         char = ''
-        print('计数部分结束')
         self.tree_function(d,d4gram,char)
-        print('d4gram结束')
         return d4gram,d
 
 
@@ -136,7 +134,6 @@ class N_gram():
             for k in range(3):
                 D[n][k] = k + 1 - (k + 2) * discount[n][0] * discount[n][k + 1] / (
                         (discount[n][0] + 2 * discount[n][1]) * discount[n][k])
-        print(discount[0][0])
         return D, discount
 
     def process_u(self, l, D, d):
@@ -162,7 +159,6 @@ class N_gram():
 
     def process_b(self, l, D, discount,Sum_0,d):
         b = [{} for _ in range(self.N - 1)]
-        print('in the b process'+str(len([x for x in l[0].items() if x[1] == 1])))
         b_ = (D[0][0] *  discount[0][0]+ D[0][1] * discount[0][1] + D[0][2] * discount[0][2]) / Sum_0
 
         for n in range(self.N - 1):
@@ -200,11 +196,8 @@ class N_gram():
         l = self.make_data_list()
         after_adjust,d = self.count_and_adjusting(l[:10000])
         after_discount,discount = self.discount(after_adjust)
-        print('discount 结束')
         U,sum_0 = self.process_u(after_adjust, after_discount,d)
-        print('计算u结束')
         B, b_ = self.process_b(after_adjust, after_discount,discount,sum_0,d)
-        print('计算B结束')
         final = [{} for _ in range(self.N)]
         length = len(after_adjust[0])
         for n in range(self.N):
@@ -301,7 +294,7 @@ class N_gram():
 
         return candidate_for_each_word
 
-    def exam_single_sen(self,w):
+    def correct_single_sen(self,w):
         # Sen_Score = 0
         w = 's'+w+'~'
         after_correct = ''
@@ -317,6 +310,12 @@ class N_gram():
             # Sen_Score += score
             after_correct += new_word
         return after_correct[1:-1]
+
+    def save_model(self,res):
+        import pickle
+        with open(self.training_result_path, 'wb') as f:
+            pickle.dump(res, f)
+
 
 def pack_up(data):
     import pickle
@@ -339,5 +338,4 @@ def loading():
 if __name__ == '__main__':
     M = N_gram(5)
     test = '今田添气不好。'
-    l = M.exam_single_sen(test)
-    print(l)
+    l = M.correct_single_sen(test)
