@@ -1,5 +1,6 @@
 import math
 import pickle
+
 class N_gram():
     def __init__(self, N):
         self.N = N
@@ -13,8 +14,8 @@ class N_gram():
 
     def make_dictionary(self):
         import os
-        if os.path.exists('data/checkpoint.pk'):
-            with open('data/checkpoint.pk', 'rb') as f:
+        if os.path.exists('data/small.pk'):
+            with open('data/small.pk', 'rb') as f:
                 data = pickle.load(f)
             return data
         else:
@@ -197,7 +198,7 @@ class N_gram():
 
     def PROCESS(self):
         l = self.make_data_list()
-        after_adjust,d = self.count_and_adjusting(l)
+        after_adjust,d = self.count_and_adjusting(l[:10000])
         after_discount,discount = self.discount(after_adjust)
         print('discount 结束')
         U,sum_0 = self.process_u(after_adjust, after_discount,d)
@@ -264,11 +265,6 @@ class N_gram():
                 max_score_index = index
 
         return max_score_index if max_score_index!=0 else ''
-        # for key, val in self.dictionary[len(sen)].items():
-        #     if key[:-1] == sen and val>max_score:
-        #         max_score = val
-        #         max_score_sen = key
-        # return max_score_sen[-1] if max_score_sen != '' else ''
 
     def correct_single_sen_brute_froce(self,w):
         candidate_for_each_word = []
@@ -324,7 +320,7 @@ class N_gram():
 
 def pack_up(data):
     import pickle
-    with open('data/data.train', 'wb') as f:
+    with open('data/small.pk', 'wb') as f:
         pickle.dump(data, f)
 
 
@@ -340,9 +336,8 @@ def loading():
 #          ['s我~'],
 #          ['s你~']]
 
-
 if __name__ == '__main__':
     M = N_gram(5)
-
     test = '今田添气不好。'
     l = M.exam_single_sen(test)
+    print(l)
