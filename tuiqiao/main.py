@@ -1,4 +1,4 @@
-from N_gram import N_gram
+from tuiqiao.N_gram import N_gram
 
 if __name__ == '__main__':
     BeforeCorrect = '今添田气不好。'

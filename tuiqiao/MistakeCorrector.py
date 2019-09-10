@@ -7,7 +7,6 @@
 """
 
 import json
-from TrieTree import Trie
 from datetime import datetime
 
 class MistakeCorrector():
