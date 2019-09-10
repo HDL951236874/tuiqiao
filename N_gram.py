@@ -2,12 +2,15 @@ import math
 import pickle
 
 class N_gram():
-    def __init__(self, N = 5):
+    def __init__(self, N = 5, make_list = False):
         self.N = N
         self.threshold = -10
         self.path = 'data/data.train'
         self.training_result_path = 'data/small.pk'
-        self.data = self.make_data_list()
+
+        if make_list:
+            self.data = self.make_data_list()
+
         self.dictionary = self.make_dictionary()
         self.PronunciationConfusion_list = self.Confusion_SimilarPronunciation()
         self.ShapeConfusion_list = self.Confusion_SimilarShape()
