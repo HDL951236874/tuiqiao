@@ -1,12 +1,13 @@
 import math
 import pickle
+import os
 
 class N_gram():
     def __init__(self, N = 5, make_list = False):
         self.N = N
         self.threshold = -10
-        self.path = 'tuiqiao/data/data.train'
-        self.training_result_path = 'tuiqiao/data/small.pk'
+        self.path = os.path.join(os.getcwd(), 'data/data.train')
+        self.training_result_path = os.path.join(os.getcwd(), 'data/small.pk')
 
         if make_list:
             self.data = self.make_data_list()
@@ -18,8 +19,11 @@ class N_gram():
 
     def make_dictionary(self):
         import os
-        if os.path.exists('tuiqiao/data/small.pk'):
-            with open('tuiqiao/data/small.pk', 'rb') as f:
+        print(os.path.join(os.getcwd(), 'data/small.pk'))
+        print(os.getcwd())
+
+        if os.path.exists(os.path.join(os.getcwd(),'data/small.pk')):
+            with open(os.path.join(os.getcwd(),'data/small.pk'), 'rb') as f:
                 data = pickle.load(f)
             return data
         else:
@@ -223,15 +227,15 @@ class N_gram():
 
     def Confusion_SimilarPronunciation(self):
         import os
-        if os.path.exists('tuiqiao/data/Confusion_SimilarPronunciation.pk'):
-            with open('tuiqiao/data/Confusion_SimilarPronunciation.pk','rb') as f:
+        if os.path.exists(os.path.join(os.getcwd(),'data/Confusion_SimilarPronunciation.pk')):
+            with open(os.path.join(os.getcwd(),'data/Confusion_SimilarPronunciation.pk'),'rb') as f:
                 data = pickle.load(f)
             return data
 
     def Confusion_SimilarShape(self):
         import os
-        if os.path.exists('tuiqiao/data/Confusion_SimilarShape.pk'):
-            with open('tuiqiao/data/Confusion_SimilarShape.pk','rb') as f:
+        if os.path.exists(os.path.join(os.getcwd(),'data/Confusion_SimilarShape.pk')):
+            with open(os.path.join(os.getcwd(),'data/Confusion_SimilarShape.pk'),'rb') as f:
                 data = pickle.load(f)
             return data
 
@@ -322,13 +326,13 @@ class N_gram():
 
 def pack_up(data):
     import pickle
-    with open('tuiqiao/data/small.pk', 'wb') as f:
+    with open(os.path.join(os.getcwd(),'data/small.pk'), 'wb') as f:
         pickle.dump(data, f)
 
 
 def loading():
     import pickle
-    with open('tuiqiao/data/checkpoint.pk', 'rb') as f:
+    with open(os.path.join(os.getcwd(),'data/checkpoint.pk'), 'rb') as f:
         data = pickle.load(f)
     return data
 

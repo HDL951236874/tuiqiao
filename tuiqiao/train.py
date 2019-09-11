@@ -1,4 +1,4 @@
-from tuiqiao.N_gram import N_gram
+from N_gram import N_gram
 
 if __name__ == '__main__':
     Model = N_gram()
