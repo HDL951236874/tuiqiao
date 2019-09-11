@@ -16,7 +16,7 @@ from setuptools import setup, find_packages
 # )
 setup(
     name = "tuiqiao",
-    version = "0.4.0",
+    version = "0.6.0",
     author = "Daolin Han",
     author_email = "2862308357@qq.com",
     description=("a spelling correction tool for Chinese"),
